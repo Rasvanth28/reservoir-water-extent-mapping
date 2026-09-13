@@ -1,0 +1,18 @@
+<?xml version="1.0" enc<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Bhavanisagar_AOI</name>
+    <Placemark>
+      <name>Bhavanisagar</name>
+      <Polygon>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              76.950,11.36766,0 77.179989,11.36766,0 77.179989,11.53099,0 76.950,11.53099,0 76.950,11.36766,0
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+  </Document>
+</kml>
