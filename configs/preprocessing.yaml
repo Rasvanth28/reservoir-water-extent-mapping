@@ -1,0 +1,58 @@
+# Label parameters (EDD 3.2). Set during the pilot; freeze before scoring validation points.
+season:
+  start_month: 1
+  end_month: 4          # Jan 1 - Apr 30 composites
+qa:
+  open_size: 3          # 3x3 morphological opening of the invalid mask
+  buffer_px: 2          # dilation of the invalid mask after opening
+reservoir:              # extent derived from the data (all clear scenes, all seasons)
+  permanent_min_freq: 0.75
+  max_extent_min_freq: 0.05
+  closing_px: 1
+  study_buffer_m: 2000  # study area = max extent buffered by this
+water:
+  otsu_clamp: [-0.1, 0.3]   # composite Otsu bounds; a per-scene Otsu at/over a bound = fallback
+  confidence_margin: 0.1    # |MNDWI - t| < margin -> unlabeled (Water, and Bare inside max extent)
+  bimodality_min: 0.5       # per-scene Otsu eta (between/total variance) below this -> fallback
+forest:
+  # STATIC forest (one map for 2015-2026): consensus of Esri multi-year Trees (A) and a Random Forest
+  # on pooled Landsat phenology (C1). See EDD 3.2 / preprocessing/forest.py.
+  min_obs: 8                  # min clear dates per pixel for phenology features (else NaN -> unlabeled)
+  esri_pos_min_years: 6       # training positives: Esri Trees in >= 6 of 7 years (2017-2023)
+  esri_neg_min_years: 6       # training negatives: Crops/Rangeland/Built (any mix) in >= 6 of 7 years
+  cap_per_class_per_site: 20000
+  esri_trees_min_years: 4     # forest_esri = Trees in >= 4 of 7 years
+  prob_threshold: 0.5         # forest_c1 = P(forest) >= this (rule forest, full coverage)
+  prob_margin: 0.15           # consensus: |P - 0.5| < margin -> unlabeled (255)
+  block_m: 1000               # spatial-block CV block size
+  cv_folds: 5
+  rf: {n_estimators: 150, max_depth: 16, min_samples_leaf: 5}
+  # --- legacy per-year rule (BHA pilot only, used by scripts/run_pilot.py; NOT by build_labels.py) ---
+  ndvi_pct: 90
+  ndvi_min: 0.6
+  dry_ndvi_min: 0.2
+  margin: 0.05
+bare:
+  ndvi_max: 0.35            # inside max extent, not water, composite NDVI < this (spec default 0.25 split the silt ring; see pilot notes)
+  outside_enabled: false    # secondary rule outside the extent (see pilot notes)
+  outside_ndvi_max: 0.15
+  outside_bright_min: 0.25  # mean(red, swir16)
+consensus:
+  min_clear: 2          # minimum clear observations per pixel
+  min_agreement: 0.75   # temporal agreement (years without Esri; Bare inside max extent)
+shoreline_width_px: 1   # stratum S5
+strata:
+  min_delta_ndvi: 0.15  # S8 (Bare<->Other only): |d Jan-Apr composite NDVI| >= this (legacy pilot: p90 when Forest involved)
+# Class codes: 0 Water, 1 Forest, 2 Bare, 3 Other, 255 unlabeled.
+# Esri io-lulc-annual-v02 codes (verified from STAC file:values): 1 Water, 2 Trees,
+# 4 Flooded veg, 5 Crops, 7 Built, 8 Bare, 9 Snow/ice, 10 Clouds, 11 Rangeland.
+esri_map:
+  1: 0
+  2: 1
+  8: 2
+  5: 3
+  7: 3
+  11: 3
+  4: 255
+  9: 255
+  10: 255

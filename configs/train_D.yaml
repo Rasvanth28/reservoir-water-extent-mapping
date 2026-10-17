@@ -1,0 +1,38 @@
+# Baseline D. Run: python -m reservoir_cd.training.train --config configs/train_D.yaml --output-dir <dir>
+seed: 42
+output_dir: outputs/runs/D_prithvi_lora
+data:
+  chips_dir: data/processed/chips
+  loso_holdout: null        # E1: set to Bhavanisagar | Mettur | Pillur to hold that site out (uses loso_<Site> splits)
+  label_source: consensus   # E2: consensus | rule | esri
+  exclusion_radius_m: 150   # validation-point exclusion, applied at load time
+  ground_truth_dir: .
+  batch_size: 4             # UPerNet's pooling BatchNorm needs batch >= 2 in train mode
+  num_workers: 2
+  augment: true
+model:
+  name: prithvi
+  backbone: prithvi_eo_v2_300_tl
+  pretrained: true
+  t: 2
+  n_classes: 4
+  img_size: 256
+  decoder_channels: 256
+  out_indices: [5, 11, 17, 23]
+  # E4: mode frozen | lora (r 4/8/16, alpha defaults to 2r) | full. Select by --set, e.g.
+  #   --set model.adaptation.r=16   or   --set model.adaptation.mode=full
+  adaptation: {mode: lora, r: 8, dropout: 0.05}  # alpha = 2r (r=8 -> 16)   # attention q/k/v/proj
+loss:
+  class_weights: null       # e.g. [1.0, 1.0, 2.0, 1.0] to up-weight Bare
+optim:
+  lr: 0.0002
+  weight_decay: 0.01
+  cosine_epochs: null
+trainer:
+  max_epochs: 50
+  patience: 10
+  precision: 16-mixed       # CUDA (Colab); the local smoke test overrides with --set trainer.precision=32-true
+  gradient_clip_val: 1.0
+  accumulate_grad_batches: 1
+  log_every_n_steps: 5
+  save_trainable_only: true   # checkpoints omit the frozen pretrained backbone (rebuilt with pretrained=true on load)

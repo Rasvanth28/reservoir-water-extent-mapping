@@ -1,0 +1,23 @@
+# Chip dataset (EDD 3.3). Inputs: data/interim/<Site>_labels.zarr; outputs under data/processed/chips/.
+sites_config: configs/sites.yaml
+labels_dir: data/interim
+out_dir: data/processed/chips
+years: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]
+pair_step_years: 1            # consecutive-year pairs 2015->2016 ... 2025->2026 (11 pairs)
+chip_size: 256
+stride_train: 128             # window grid used for training chips
+stride_eval: 256              # window grid from which val/test chips are chosen (non-overlapping)
+min_valid_frac: 0.5           # chip-pair dropped if < this fraction of pixels has a clear obs at BOTH dates
+min_labeled_frac: 0.02        # ... or if < this fraction has a consensus label at BOTH dates
+exclusion:                    # applied at LOAD time (datasets/exclusion.py), never baked into the store
+  radius_m: 150
+  key_glob: "data/ground_truth/**/*_key.csv"
+  gpkg: data/ground_truth/validation_points.gpkg
+splits:
+  seed: 42
+  val_frac: 0.15
+  test_frac: 0.15
+  gap_px: 0                   # train windows share no pixel with val/test (0 = disjoint). 128-256 (the 1-chip gap) leaves BHA/Pillur with no within-site val/test; see EDD 3.3
+  min_labeled_frac: 0.05      # a val/test window needs >= this labeled fraction (mean over pairs)
+  min_change_px: 200          # ... and >= this many water loss+gain pixels (summed over pairs)
+  min_water_px: 50            # prefer val/test windows with >= this many max-extent pixels

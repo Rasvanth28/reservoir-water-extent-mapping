@@ -1,0 +1,15 @@
+# Full validation sample (validation_protocol.md v2, section 2-3). Drawn by scripts/draw_validation_sample.py
+sites_config: configs/sites.yaml
+interim_dir: data/interim
+out_dir: data/ground_truth/full
+pilot_key_glob: "data/ground_truth/pilot/*_key.csv"
+seed: 20261013
+pairs_start: 2015          # consecutive Jan-Apr pairs 2015->16 ... 2025->26
+pairs_end: 2026
+shoreline_width_px: 1
+min_spacing_m: 90          # same-year-pair points
+pilot_exclusion_radius_m: 150
+block_size_m: 1000
+spaced_cap_per_pair: 1000  # cap for the "spaced candidates" diagnostic
+allocation: {S1: 50, S2: 30, S3: 40, S4: 30, S5: 100, S6: 125, S7: 125}   # per site, total 500
+second_interpreter_per_site: 50   # random 10% (150 total)

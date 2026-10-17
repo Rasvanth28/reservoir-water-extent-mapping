@@ -1,0 +1,31 @@
+# Baseline B. Run: python -m reservoir_cd.training.train --config configs/train_B.yaml --output-dir <dir>
+seed: 42
+output_dir: outputs/runs/B_siamdiff
+data:
+  chips_dir: data/processed/chips
+  loso_holdout: null        # E1: set to Bhavanisagar | Mettur | Pillur to hold that site out (uses loso_<Site> splits)
+  label_source: consensus   # E2: consensus | rule | esri
+  exclusion_radius_m: 150   # validation-point exclusion, applied at load time
+  ground_truth_dir: .
+  batch_size: 8             # UPerNet's pooling BatchNorm needs batch >= 2 in train mode
+  num_workers: 2
+  augment: true
+model:
+  name: siam_diff
+  in_channels: 6
+  n_classes: 4
+  t: 2
+  encoder_weights: null
+loss:
+  class_weights: null       # e.g. [1.0, 1.0, 2.0, 1.0] to up-weight Bare
+optim:
+  lr: 0.001
+  weight_decay: 0.01
+  cosine_epochs: null
+trainer:
+  max_epochs: 50
+  patience: 10
+  precision: 16-mixed       # CUDA (Colab); the local smoke test overrides with --set trainer.precision=32-true
+  gradient_clip_val: 1.0
+  accumulate_grad_batches: 1
+  log_every_n_steps: 5

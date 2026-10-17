@@ -1,0 +1,19 @@
+site: Bhavanisagar
+site_code: BHA
+zarr: data/Bhavanisagar_datacube.zarr
+kml: bhavanisagar.kml   # download bbox only; no longer used for the study area
+bbox_lonlat: [76.95, 11.36, 77.18, 11.53]
+preprocessing_config: configs/preprocessing.yaml
+years: [2017, 2018, 2019, 2024, 2025]
+pairs: [[2017, 2018], [2018, 2019], [2024, 2025]]
+esri_years: [2017, 2018, 2019, 2020, 2021, 2022, 2023]
+esri_cache: data/external/esri_lulc
+seed: 42
+min_spacing_m: 90
+block_size_m: 1000
+# Pilot allocation over the 3 pairs pooled (total 50)
+allocation: {S1: 5, S2: 5, S3: 5, S4: 5, S5: 5, S6: 8, S7: 8, S8: 9}
+interim_zarr: data/interim/Bhavanisagar_pilot.zarr
+summary_json: data/interim/pilot_summary.json
+points_dir: data/ground_truth/pilot
+figures_dir: visualizations/pilot

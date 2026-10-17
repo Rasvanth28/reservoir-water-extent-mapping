@@ -1,0 +1,5 @@
+# Sites for scripts/build_labels.py. Cube reflectance is already scaled; never rescale.
+sites:
+  - {name: Bhavanisagar, code: BHA, zarr: data/Bhavanisagar_datacube.zarr}
+  - {name: Mettur,       code: MET, zarr: data/Mettur_datacube.zarr}
+  - {name: Pillur,       code: PIL, zarr: data/Pillur_datacube.zarr}

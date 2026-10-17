@@ -1,0 +1,14 @@
+preprocessing_config: configs/preprocessing.yaml
+sites_config: configs/sites.yaml
+years: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]
+esri_years: [2017, 2018, 2019, 2020, 2021, 2022, 2023]
+esri_cache: data/external/esri_lulc
+jrc_cache: data/external/jrc
+interim_dir: data/interim
+figures_dir: visualizations/labels
+summary_json: data/interim/labels_summary.json
+seed: 42
+min_spacing_m: 90
+# Full-sample quotas per site (feasibility check only; the sample is NOT drawn here)
+quota: {S1: 50, S2: 50, S3: 50, S4: 50, S5: 50, S6: 100, S7: 100, S8: 50}
+feasibility_factor: 3

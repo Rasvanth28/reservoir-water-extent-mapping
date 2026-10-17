@@ -20,7 +20,7 @@ These three sites were chosen for their distinct morphological, climatic, and st
 
 1. **Geospatial Data Engineering** — Query Landsat 8/9 Level-2 Surface Reflectance imagery (Bands: Blue, Green, Red, NIR, SWIR1, SWIR2, plus the 16-bit `QA_PIXEL` cloud mask) from Microsoft's Planetary Computer STAC API, and consolidate the results into chunked Zarr data cubes.
 2. **Dynamic Ground Truth** — Generate water masks via the Modified Normalized Difference Water Index (MNDWI) with automatic Otsu thresholding.
-3. **Static Basin Masks** — Use ISRO Bhuvan LULC maps as topographical priors and weak supervision, constraining predictions to plausible reservoir boundaries.
+3. **Static Basin Masks** — Derive each reservoir's maximum extent from its 2015–2026 water frequency and use it, buffered, as a topographical prior that keeps predictions within plausible reservoir boundaries. (ISRO Bhuvan LULC maps were originally planned for this and for weak supervision, but are on hold pending data access.)
 4. **Independent Validation** — Evaluate against N=1,500 manually digitized points (500 per site), cross-verified against historical Google Earth Pro imagery (±15 days of the Landsat overpass), to avoid circular evaluation logic.
 5. **Modeling** — Fine-tune the Prithvi-EO-2.0 backbone with Low-Rank Adaptation (LoRA), feeding concatenated multi-temporal feature maps into a UPerNet decoder to predict multi-class semantic water-extent transitions, benchmarked against an MNDWI+Otsu baseline and an FC-Siam-diff baseline trained from scratch.
 
@@ -33,7 +33,7 @@ See [`base_architecture.md`](base_architecture.md) for the full 7-step architect
 ├── data_collection.py    # Queries Planetary Computer STAC API, builds per-reservoir Zarr data cubes
 ├── salvage_zarr.py        # Recovery utility for Zarr stores left in a fragmented/broken state
 ├── visualize_zarr.py      # Generates True/False Color composite PNGs for visual QA
-├── *.kml                  # Reservoir boundary geometries (Bhuvan)
+├── *.kml                  # Download bounding boxes (AOI rectangles)
 ├── visualizations/        # Generated QA composite images
 ├── Reference Papers/      # Background literature referenced by the methodology
 ├── base_architecture.md   # Full 7-step pipeline architecture

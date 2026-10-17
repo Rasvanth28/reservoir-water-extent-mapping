@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "reservoir_cd"
+version = "0.1.0"
+description = "Reservoir water-extent change detection with Prithvi-EO-2.0"
+requires-python = ">=3.12"
+dependencies = [
+  "numpy", "scipy", "scikit-image", "shapely", "pyproj", "rasterio",
+  "xarray", "zarr", "dask", "matplotlib", "pyyaml", "scikit-learn",
+  "pystac-client", "planetary-computer", "stackstac",
+  "pandas", "pyarrow",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+# Training / inference stack (Colab installs this itself; also installs on the local macOS venv, Python 3.13)
+train = ["torch", "torchvision", "lightning", "torchgeo", "terratorch", "peft", "tensorboard", "geopandas"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
