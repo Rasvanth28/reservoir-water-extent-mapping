@@ -10,3 +10,5 @@ __pycache__/
 *.bak
 outputs/
 .pytest_cache/
+tools/
+.ge_test/

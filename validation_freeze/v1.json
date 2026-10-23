@@ -1,0 +1,54 @@
+{
+  "version": "v1",
+  "created_utc": "2026-10-20T15:17:38+00:00",
+  "git_commit": "ad8034aae6b40f863f90807426cd99d3d4f534c6",
+  "n_points": 1500,
+  "n_per_site": {
+    "Bhavanisagar": 500,
+    "Mettur": 500,
+    "Pillur": 500
+  },
+  "n_per_stratum": {
+    "Bhavanisagar": {
+      "S1": 50,
+      "S2": 30,
+      "S3": 40,
+      "S4": 30,
+      "S5": 100,
+      "S6": 125,
+      "S7": 125
+    },
+    "Mettur": {
+      "S1": 50,
+      "S2": 30,
+      "S3": 40,
+      "S4": 30,
+      "S5": 100,
+      "S6": 125,
+      "S7": 125
+    },
+    "Pillur": {
+      "S1": 50,
+      "S2": 30,
+      "S3": 32,
+      "S4": 30,
+      "S5": 108,
+      "S6": 125,
+      "S7": 125
+    }
+  },
+  "inputs": {
+    "data/ground_truth/full/BHA/BHA_labels_filled.csv": "a87b71f2bef11cb71a8a5ba5a5af0ce1470d1a331e10630499fed6ba33329ff7",
+    "data/ground_truth/full/BHA/BHA_key.csv": "fa14a28797a1f4f5ca103d116656a3885c34a8ff837ccde3f414fd58a4fbab45",
+    "data/ground_truth/full/MET/MET_labels_filled.csv": "84fcec7efadf31b15dd44126048d054e3b486d30c0111978528f1196bd3b641a",
+    "data/ground_truth/full/MET/MET_key.csv": "139eb842ecd231da0a083508df4c78cda30a2ef99de771438e788d323ad83e48",
+    "data/ground_truth/full/PIL/PIL_labels_filled.csv": "7e222e343f4fe7602d0d31f707ac8e6617822196521a68b9f221f9e4f5488486",
+    "data/ground_truth/full/PIL/PIL_key.csv": "e7a7400cc57d1bfa8e854833ebc3feadd4f1ea86b6e335e8cd90206ec6f23592",
+    "data/ground_truth/full/strata_weights.csv": "12cff467e4f76015e11fc01a344f1f958180686de6f97ea8fa93be1d4936f7be"
+  },
+  "outputs": {
+    "strata_weights.csv": "12cff467e4f76015e11fc01a344f1f958180686de6f97ea8fa93be1d4936f7be",
+    "validation_points.csv": "a79d341ff867296a09bde24edcc14273db5e79a0f30192b8ffc5c08dc9a3df89",
+    "validation_points.gpkg": "89917a9648c09abc9bd24952ca59095546f7d46c6f5a5987b282905fe2fb9121"
+  }
+}

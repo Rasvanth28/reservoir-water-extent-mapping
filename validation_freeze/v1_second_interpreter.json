@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "second_interpreter": "VS",
+  "primary_interpreter": "KC",
+  "n_points": 150,
+  "decision": "2026-10-24: both interpretations kept as-is, no adjudication; KC (v1) is the reference, VS is the independent agreement check",
+  "files": {
+    "BHA_labels_2nd_filled.csv": "7c720214f7fd0dba7c71d3256095b83e4e1fe7aa7e3788bdcbba4d2af60df722",
+    "MET_labels_2nd_filled.csv": "3f32d19af02caa7107820a3e2f8b42bcd2f9c28d89e616e8635e4fa03605cd56",
+    "PIL_labels_2nd_filled.csv": "10451099a90134a40b3ab083b3b264072bd543ae2a10fe40be82cdbfae2cc493",
+    "adjudication.csv": "fac031fb08f3002d32cab3997f7010ac5d162223234ea9e55ca618e64449aa06"
+  }
+}

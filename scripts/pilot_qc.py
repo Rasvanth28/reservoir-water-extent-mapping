@@ -45,10 +45,11 @@ def qc(df):
             except ValueError:
                 issues.append((pid, t, f"confidence '{conf}' not a number"))
                 continue
-            if mix == "TRUE" and conf > 2:
-                issues.append((pid, t, f"mixed=TRUE but confidence {conf} (rule: ≤ 2)"))
-            if src in {"S2", "LS"} and conf > 2:
-                issues.append((pid, t, f"{src} source but confidence {conf} (rule: ≤ 2)"))
+            # Mixed and S2 squares may get confidence 3 (LABELING_GUIDE decision log 2026-10-13/19).
+            if (lab == "NA") != (conf == 0):
+                issues.append((pid, t, f"label {lab} with confidence {conf} (rule: NA ⇔ 0)"))
+            if src == "LS" and conf > 2:
+                issues.append((pid, t, f"LS source but confidence {conf} (rule: ≤ 2)"))
             if rdate:
                 off = (pd.Timestamp(rdate) - pd.Timestamp(r[f"date_{t}"])).days
                 if abs(off) > WINDOW_DAYS:

@@ -24,7 +24,22 @@ The design behind it (strata, counts, statistics) is in `validation_protocol.md`
    - **View → Historical Imagery:** turn on. A time slider appears at the top left.
    - **Layers panel:** turn off everything except *Borders and Labels* (fewer distractions).
 3. Bookmark the fallback imagery source: **Copernicus Browser**, https://browser.dataspace.copernicus.eu (free account). It provides Sentinel-2 (10 m, from 2016) and Landsat 8/9.
-4. Open the labeling sheet (`<SITE>_labels.csv`) in Excel, Numbers or Google Sheets. Keep it next to Google Earth.
+4. Open the labeling workbook (`<SITE>_labels.xlsx`, made by `scripts/label_workbook.py build`) in Excel or Numbers. Keep it next to Google Earth. It has dropdowns, and typing `S2` or `LS` in `ref_source` fills `ref_date` with the reference chip's image date (grey `chip_*` columns). For `GE`, type the date over the formula. When done, save as .xlsx (Numbers: File → Export To → Excel) and run `scripts/label_workbook.py export <SITE>_labels.xlsx` to get `<SITE>_labels_filled.csv`.
+5. **Optional: keyboard labeling app.** Instead of typing into the workbook, run `.venv/bin/python scripts/label_app.py data/ground_truth/full/<SITE>/<SITE>_labels.xlsx --interpreter <INITIALS>` (close the workbook in Excel first). It opens a browser page with the T1 and T2 chips side by side, starts at the first incomplete point, saves each point to the workbook as you go (backup in `backups/`) and refreshes `<SITE>_labels_filled.csv`. `ref_source`, `ref_date`, `interpreter` and `minutes` are filled automatically. A banner on each date says whether Google Earth has an image within ±15 days (green: which date; grey: none, label from the chip), from `scripts/fetch_ge_dates.py` (Google Earth's historical image dates, via the GEHistoricalImagery tool in `tools/`). Open Google Earth only on green. Keys apply to the highlighted date:
+
+| Key | Action |
+|---|---|
+| `W` `F` `B` `O` | Water / Forest / Bare / Other |
+| `N` | NA (confidence 0, date complete) |
+| `1` `2` `3` | Confidence; completes the date (T1 then goes to T2, T2 saves and goes to the next point) |
+| `M` | Toggle mixed (a second class is visible in the square); then press the second class (recorded in notes as `T1 mixed Forest/Water`) |
+| `G` | Fly Google Earth Pro to the point; source becomes GE with the GE image date prefilled. Set the time slider to that date, check it, `Enter` |
+| `S` | Back to the chip as reference source |
+| `/` | Type a note, `Enter` to return |
+| `Tab` | Switch T1/T2 |
+| `←` `→` | Previous / next point (saves what is filled) |
+| `U` | Next unlabeled point |
+| `Backspace` | Clear the active date |
 
 ---
 
@@ -57,8 +72,8 @@ You will **not** see the stratum, the model predictions or the automatic labels.
 4. Look at the 30 m square and pick the class covering more than half of it, using **§5 Class definitions**.
 5. Fill in:
    - `label_t1`: Water / Forest / Bare / Other
-   - `confidence_t1`: 3 = clearly visible, 2 = probably right, 1 = guess
-   - `mixed_t1`: TRUE if no class clearly covers more than half (e.g. the square straddles the shoreline); otherwise FALSE
+   - `confidence_t1`: how sure you are that `label_t1` (the class covering more than half) is right: 3 = clearly visible, 2 = probably right, 1 = guess
+   - `mixed_t1`: TRUE if a **second class is visibly present** inside the square (e.g. the square touches the shoreline, even 90/10); FALSE if the square is a single class. With TRUE, note the second class (and the split if you can, e.g. `Forest/Water 90/10`)
 
 ### Step 3: Label T2
 Repeat Step 2 with `date_t2`, filling the `_t2` columns. **Don't copy T1** if the image looks similar; look again.
@@ -110,7 +125,8 @@ Repeat Step 2 with `date_t2`, filling the `_t2` columns. **Don't copy T1** if th
 | Hill or cloud **shadow** over the square | Label the class *under* the shadow if you can tell; otherwise use fallback imagery |
 | Leafless deciduous trees (dry season) | **Forest** |
 | Scattered trees over grass/scrub (canopy < 50%) | **Other** |
-| Square split evenly between two classes | Pick the larger one, set `mixed = TRUE`, `confidence` ≤ 2 |
+| A second class is visible in the square (e.g. 90/10 or 70/30) | Label the larger one, `mixed = TRUE`. Confidence 3 is allowed if the larger class is clearly the majority |
+| Square split about evenly (≈ 50/50, you can't tell which is larger) | Pick the one you think is larger, `mixed = TRUE`, `confidence` ≤ 2 |
 
 **New tricky case?** Write it in `notes` and add it to the **§9 Decision log** so later points are labeled the same way.
 
@@ -161,3 +177,5 @@ Add any new rule here with the date, so every later point follows it.
 | 2026-10-13 | Priority | **Water vs. non-water is the main result.** Spend your care there: shorelines, muddy or weedy water, wet mud. Still give a land class for non-water, but don't agonise over Forest vs. Other on 10 m images |
 | 2026-10-13 | Confidence with Sentinel-2 | Confidence 3 is allowed with S2 when the whole square is uniform and unambiguous (e.g. open water, uniform dry bed). Otherwise S2 ≤ 2. (Pilot: replaces the blanket "S2 ≤ 2".) |
 | 2026-10-12 | Google Earth's nearest clear image is outside ±15 days, and the in-window Sentinel-2 picture is ambiguous (e.g. dry-season brown) | Label from the in-window Sentinel-2 picture (`ref_source = S2`). The out-of-window GE image may be used to judge **structure** (tree crowns vs fields vs soil) if S2 shows nothing contradicting it (clearing, burn, water). Confidence ≤ 2. Note: `structure from GE <date>`. |
+| 2026-10-19 | Mixed definition | `mixed = TRUE` whenever a **second class is visibly present** in the square, however small its share (as used for PIL). Considered a > 25% threshold and rejected it, to keep all three sites consistent without re-checking PIL. |
+| 2026-10-19 | Confidence on mixed squares | Confidence is about the **main label** (the class covering more than half), not about both classes being present. Mixed squares may get confidence 3 when the main class is clearly the majority (e.g. 70/30), also with S2 (overrides the 2026-10-13 "uniform square" condition for this case). ≈ 50/50 stays ≤ 2. |

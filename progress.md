@@ -2,6 +2,10 @@
 
 This document tracks our current progress against the pipeline defined in `base_architecture.md`, highlighting what has been strictly followed and where we have made strategic architectural adaptations.
 
+## Update 2026-10-20 (validation sample labeled and frozen)
+*   **All 1,500 v2 validation points labeled** (500 per site, interpreter KC, `scripts/label_app.py`), QC clean, and **frozen as v1**: `scripts/freeze_validation.py --version v1` → `data/ground_truth/frozen/v1/` (`validation_points.gpkg/.csv`, `strata_weights.csv`, `manifest.json` with sha256 of all inputs/outputs; tracked copy `validation_freeze/v1.json`). `pilot_qc.py` rules updated to the 2026-10-19 decision log (mixed/S2 may have confidence 3).
+*   **Second interpreter done (2026-10-24):** VS labeled the 150-point subset (`scripts/interpreter_agreement.py`, report `validation_freeze/v1_interpreter_agreement.txt`, VS labels archived with hashes in `data/ground_truth/frozen/v1_second_interpreter/`). Water vs non-water κ 0.70 (BHA 0.81, MET 0.80, PIL 0.50); 4-class κ 0.39; water-transition κ 0.65. **Decision:** both interpretations kept as-is, no adjudication; KC (v1) remains the reference, so there is no v1.1. Known limitation to report: VS never used Other, marked mixed once in 300, and labeled 35 KC-Water point-dates as Forest (23 at Pillur, mostly shoreline squares).
+
 ## Update 2026-10-10 (labels, chips, Baseline A, training scaffolding)
 *   **Labels:** static consensus forest + yearly rule/consensus labels are built for all three sites and 2015–2026 (`data/interim/<Site>_labels.zarr`, `scripts/build_labels.py`).
 *   **Chips (Step 3):** done. `scripts/make_chips.py` builds one int16 scene Zarr per site + Parquet chip-pair indices + spatial/leave-one-site-out splits under `data/processed/chips/` (~142 MB total, zipped by `scripts/package_chips.py`). `PrithviReservoirDataset` implemented, with validation-point exclusion applied at load time.
@@ -37,14 +41,13 @@ This document tracks our current progress against the pipeline defined in `base_
 ---
 
 ## 2. Ground Truth & Labeling Protocol
-**Status:** `IN PROGRESS` (updated 2026-10-13)
+**Status:** `IN PROGRESS` (updated 2026-10-20)
 *   **Training labels done (2026-10-10):** static forest (Esri + phenology RF consensus) and yearly rule/consensus labels for all 3 sites, 2015–2026 (`scripts/build_labels.py`). The KML basin idea below was replaced by the data-derived maximum reservoir extent.
 *   **Labeling pilot done (2026-10-13):** 50 Bhavanisagar points labeled by the interpreter (`data/ground_truth/pilot/BHA_labels_filled.csv`; checks in `scripts/pilot_qc.py`; results in `validation_protocol.md` §8). Water reference labels are reliable; land classes are not, from 10 m Sentinel-2. **Decision:** water is the primary endpoint and land classes secondary (PRD §5a). Validation design moved to v2 (7 strata, shoreline/water-change heavy). Labeling aids: `scripts/make_reference_chips.py` (Sentinel-2 chips, no account) and `scripts/make_copernicus_links.py`.
-*   **Next:** draw the full 1,500-point sample (v2) and label it.
+*   **Full sample done (2026-10-20):** 1,500 v2 points drawn, labeled and frozen as v1 (`data/ground_truth/frozen/v1/`). Second-interpreter κ done (2026-10-24, kept as-is, no v1.1).
 *   **ISRO Bhuvan LULC maps removed from the pipeline (for now).** Our data access request to Bhuvan has not been granted, so we are not depending on it.
     *   *Plan:* Bhuvan LULC maps resampled to 30m as (a) weak supervision labels for LoRA training and (b) static topographical basin masks.
     *   *Adaptation:* Training labels will come from the dynamic MNDWI + Otsu masks generated from the Landsat stack itself. The basin constraint can use the reservoir boundary KMLs we already have (`*.kml`), rasterized to the 30m grid. If Bhuvan access is granted later, it can be added back as an extra prior.
-*   The N=1,500 validation points: being drawn (v2), not yet labeled.
 
 ---
 

@@ -1,0 +1,33 @@
+150 points, interpreter A = KC (v1), B = VS
+
+Point-dates: 300, left out for NA: 17 (A 0, B 17)
+
+== Water vs non-water (primary endpoint)
+  all                          n=283  agreement  84.8%  κ 0.700
+  date t1                      n=143  agreement  83.2%  κ 0.672
+  date t2                      n=140  agreement  86.4%  κ 0.728
+  Bhavanisagar                 n= 93  agreement  90.3%  κ 0.808
+  Mettur                       n=100  agreement  90.0%  κ 0.796
+  Pillur                       n= 90  agreement  73.3%  κ 0.501
+
+== 4 classes
+  all                          n=283  agreement  57.6%  κ 0.385
+  Bhavanisagar                 n= 93  agreement  63.4%  κ 0.463
+  Mettur                       n=100  agreement  51.0%  κ 0.309
+  Pillur                       n= 90  agreement  58.9%  κ 0.364
+B (VS)  Bare  Forest  Water
+A (KC)                     
+Bare      38      19      3
+Forest     8      12      0
+Other     43       7      0
+Water      5      35    113 
+
+== Water transition per point (gain / loss / stable)
+  all                          n=136  agreement  79.4%  κ 0.648
+B (VS)  gain  loss  stable
+A (KC)                    
+gain      19     0       7
+loss       0    26      10
+stable     7     4      63 
+
+Disagreements: 99 points (36 on water vs non-water) → data/ground_truth/full/second_interpreter/adjudication.csv

@@ -108,8 +108,8 @@ Merged schema:
      .venv/bin/python scripts/make_reference_chips.py  data/ground_truth/full/$c/${c}_labels.csv
    done
    ```
-4. Label the points (§4), then run the second-interpreter check.
-5. Freeze the dataset: version and hash it before any model is scored. Never relabel after seeing model results. Load-time exclusion (`configs/chips.yaml`, `data/ground_truth/**/*_key.csv`, 150 m) automatically covers both the pilot and the full keys.
+4. Label the points (§4), then run the second-interpreter check: `.venv/bin/python scripts/interpreter_agreement.py --version v1` (κ for water/non-water, 4 classes and water transition; writes `second_interpreter/adjudication.csv`). For v1 (2026-10-24) the disagreements were **not** adjudicated: both interpretations are kept, KC is the reference and the κ is reported as measured.
+5. Freeze the dataset: version and hash it before any model is scored (`.venv/bin/python scripts/freeze_validation.py --version v1` → `data/ground_truth/frozen/v1/`, tracked manifest `validation_freeze/v1.json`; refuses to overwrite, corrections go into a new version). Never relabel after seeing model results. Load-time exclusion (`configs/chips.yaml`, `data/ground_truth/**/*_key.csv`, 150 m) automatically covers both the pilot and the full keys.
 
 ## 7. Pilot (before full-scale labeling)
 

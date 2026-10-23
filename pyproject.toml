@@ -11,7 +11,7 @@ dependencies = [
   "numpy", "scipy", "scikit-image", "shapely", "pyproj", "rasterio",
   "xarray", "zarr", "dask", "matplotlib", "pyyaml", "scikit-learn",
   "pystac-client", "planetary-computer", "stackstac",
-  "pandas", "pyarrow",
+  "pandas", "pyarrow", "openpyxl", "numbers-parser",
 ]
 
 [project.optional-dependencies]
