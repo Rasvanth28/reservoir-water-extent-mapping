@@ -1,0 +1,11 @@
+# Accuracy assessment (EDD 3.7) against a frozen validation version. Run: scripts/evaluate.py
+validation_version: v1
+frozen_dir: data/ground_truth/frozen        # <frozen_dir>/<version>/validation_points.csv + strata_weights.csv
+chips_dir: data/processed/chips             # grid (x0, y0, res) of each site
+out_dir: outputs/metrics                    # -> <out_dir>/<version>/
+n_boot: 1000                                # stratified 1 km block bootstrap replicates
+seed: 20261024
+methods:                                    # name -> source; key = automatic labels in the key file
+  rule:       {type: key, column: rule_label}
+  consensus:  {type: key, column: consensus_label}
+  baseline_a: {type: water_zarr, path: data/processed/predictions/baseline_a}
